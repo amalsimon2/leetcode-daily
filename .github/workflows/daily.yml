@@ -1,0 +1,58 @@
+name: Daily LeetCode Generator
+
+on:
+  schedule:
+    - cron: "30 18 * * *"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate daily problem
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python generate.py
+
+     - name: Configure Git
+  run: |
+    git config user.name "amalsimon2"
+    git config user.email "amalsimc@gmail.com"
+
+      - name: Commit generated project
+        run: |
+          git add .
+
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Daily LeetCode Problem"
+          fi
+
+      - name: Push to GitHub
+        run: |
+          git push
+
+# Workflow activation test
