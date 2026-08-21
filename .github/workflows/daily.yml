@@ -3,7 +3,6 @@ name: Daily LeetCode Generator
 on:
   schedule:
     - cron: "30 18 * * *"
-
   workflow_dispatch:
 
 permissions:
@@ -14,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -36,10 +34,10 @@ jobs:
         run: |
           python generate.py
 
-     - name: Configure Git
-  run: |
-    git config user.name "amalsimon2"
-    git config user.email "amalsimc@gmail.com"
+      - name: Configure Git
+        run: |
+          git config user.name "amalsimon2"
+          git config user.email "amalsimc@gmail.com"
 
       - name: Commit generated project
         run: |
@@ -54,5 +52,3 @@ jobs:
       - name: Push to GitHub
         run: |
           git push
-
-# Workflow activation test
